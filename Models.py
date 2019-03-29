@@ -39,14 +39,29 @@ class World:
         self.height = height
 
         self.ship = Ship(self, 295, 50)
+        self.on_press = []
 
     def on_key_press(self, key, key_modifiers):
         if key in KEY_MAP:
             self.ship.direction = KEY_MAP[key]
+            self.on_press.append(KEY_MAP[key])
     
     def on_key_release(self, key, key_modifiers):
         if key in KEY_MAP:
-            self.ship.direction = DIR_STILL
+            self.on_press.remove(KEY_MAP[key])
+            if self.on_press == []:
+                self.ship.direction = DIR_STILL
+            elif self.check_on_key():
+                if self.ship.direction == DIR_RIGHT:
+                    self.ship.direction = DIR_LEFT
+                else:
+                    self.ship.direction = DIR_RIGHT
+    
+    def check_on_key(self):
+        if self.ship.direction in self.on_press:
+            return False
+        else:
+            return True
 
     def update(self, delta):
         self.ship.update(delta)
