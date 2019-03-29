@@ -1,5 +1,6 @@
 import arcade
-from Models import World,Ship
+from Models import World,Ship,Bullet
+
 WIDTH = 500
 HEIGHT = 750
 
@@ -12,6 +13,8 @@ class SpaceWindow(arcade.Window):
         self.world = World(WIDTH, HEIGHT) 
         self.Shipsprite = ModelSprite('Character\Ship.png',
                                         model=self.world.ship)
+        self.Bulletsprite = ModelSprite('Character\Bullet.png',
+                                        model=self.world.bullet)
 
     def on_draw(self):
         arcade.start_render()
@@ -19,6 +22,8 @@ class SpaceWindow(arcade.Window):
                                       WIDTH, HEIGHT, self.background)
 
         self.Shipsprite.draw()
+        self.Bulletsprite.draw()
+
     
     def on_key_press(self, key, key_modifiers):
          self.world.on_key_press(key, key_modifiers)
