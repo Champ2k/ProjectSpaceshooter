@@ -45,6 +45,29 @@ class Bullet:
     def update(self, delta):
         self.shoot(DIR_UP)
 
+class Enemy:
+    def __init__(self, world, Horizon, Vertical):
+        self.world = world
+        self.horizon = Horizon
+        self.vertical = Vertical
+        self.direction = DIR_DOWN
+        self.enemy_list = []
+    
+    def random_direction(self, direction):
+        self.horizon += MOVEMENT_SPEED * DIR_OFFSETS[direction][0]
+        self.vertical += MOVEMENT_SPEED * DIR_OFFSETS[direction][1]
+
+        x = randint(1,2)
+        if x == 1:
+            self.direction = DIR_LEFT
+        elif x == 2:
+            self.direction = DIR_RIGHT
+    
+    def update(self, delta):
+        self.random_direction(self.direction)
+
+    
+
 class World:
     def __init__(self, width, height):
         self.width = width
@@ -52,12 +75,12 @@ class World:
 
         self.ship = Ship(self, 250, 50)
         self.bullet = Bullet(self,self.ship.horizon ,self.ship.vertical)
+        self.enemy = Enemy(self, 250, 650)
         self.on_press = []
         self.bullet_list = []
 
         self.has_shoot = False
     
-
     def on_key_press(self, key, key_modifiers):
         if key in KEY_MAP:
             self.ship.direction = KEY_MAP[key]

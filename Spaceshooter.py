@@ -1,5 +1,5 @@
 import arcade
-from Models import World,Ship,Bullet
+from Models import World,Ship,Bullet,Enemy
 
 WIDTH = 500
 HEIGHT = 750
@@ -13,8 +13,12 @@ class SpaceWindow(arcade.Window):
         self.world = World(WIDTH, HEIGHT) 
         self.Shipsprite = ModelSprite('Character\Ship.png',
                                         model=self.world.ship)
+
         self.Bulletsprite = ModelSprite('Character\Bullet.png',
                                         model=self.world.bullet)
+        
+        self.Enemysprite = ModelSprite('Character\Enemy1.png',
+                                        model=self.world.enemy)
 
     def on_draw(self):
         arcade.start_render()
@@ -25,6 +29,7 @@ class SpaceWindow(arcade.Window):
 
         self.draw_shoot()
         
+        self.Enemysprite.draw()
     
     def draw_shoot(self):
         for i in self.world.bullet_list:
