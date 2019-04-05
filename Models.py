@@ -52,11 +52,12 @@ class Enemy:
         self.vertical = Vertical
         self.direction = DIR_DOWN
         self.enemy_list = []
-    
-    def random_direction(self, direction):
+
+    def move(self, direction):
         self.horizon += MOVEMENT_SPEED * DIR_OFFSETS[direction][0]
         self.vertical += MOVEMENT_SPEED * DIR_OFFSETS[direction][1]
-
+    
+    def random_direction(self, direction):
         x = randint(1,2)
         if x == 1:
             self.direction = DIR_LEFT
@@ -64,8 +65,8 @@ class Enemy:
             self.direction = DIR_RIGHT
     
     def update(self, delta):
-        self.random_direction(self.direction)
-
+        self.move(self.direction)
+        # self.random_direction(self.direction)
     
 
 class World:
@@ -112,7 +113,7 @@ class World:
         self.ship.update(delta)
         for i in self.bullet_list:
             i.update(delta)
-
+        self.enemy.update(delta)
         
 
     
