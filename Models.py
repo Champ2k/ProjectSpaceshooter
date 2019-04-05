@@ -2,7 +2,7 @@ import arcade
 from random import randint
 
 MOVEMENT_SPEED = 5
-MOVEMENT_BULLET_SPEED = 10
+MOVEMENT_BULLET_SPEED = 12
 DIR_STILL = 0
 DIR_UP = 1
 DIR_RIGHT = 2
@@ -39,27 +39,34 @@ class Bullet:
         self.horizon = Horizon
         self.vertical = Vertical
 
-    def shoot(self):
-        self.vertical += MOVEMENT_BULLET_SPEED
+    def shoot(self, direction):
+        self.vertical += MOVEMENT_BULLET_SPEED * DIR_OFFSETS[direction][1]
 
-    
-
-        
+    def update(self, delta):
+        self.shoot(DIR_UP)
 
 class World:
     def __init__(self, width, height):
         self.width = width
         self.height = height
 
-        self.ship = Ship(self, 265, 50)
-        self.bullet = Bullet(self,self.ship.horizon ,self.ship.vertical+50)
+        self.ship = Ship(self, 250, 50)
+        self.bullet = Bullet(self,self.ship.horizon ,self.ship.vertical)
         self.on_press = []
+        self.bullet_list = []
+
+        self.has_shoot = False
+    
 
     def on_key_press(self, key, key_modifiers):
         if key in KEY_MAP:
             self.ship.direction = KEY_MAP[key]
             self.on_press.append(KEY_MAP[key])
-        
+        if key == arcade.key.SPACE:
+            self.bullet = Bullet(self,self.ship.horizon ,self.ship.vertical+25)
+            self.has_shoot = True
+            self.bullet_list.append(self.bullet)
+
     
     def on_key_release(self, key, key_modifiers):
         if key in KEY_MAP:
@@ -80,6 +87,10 @@ class World:
 
     def update(self, delta):
         self.ship.update(delta)
+        for i in self.bullet_list:
+            i.update(delta)
+
+        
 
     
 

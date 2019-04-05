@@ -20,10 +20,16 @@ class SpaceWindow(arcade.Window):
         arcade.start_render()
         arcade.draw_texture_rectangle(WIDTH // 2, HEIGHT // 2,
                                       WIDTH, HEIGHT, self.background)
-
+        
         self.Shipsprite.draw()
-        self.Bulletsprite.draw()
 
+        self.draw_shoot()
+        
+    
+    def draw_shoot(self):
+        for i in self.world.bullet_list:
+            ModelSprite('Character\Bullet.png',
+                                        model=i).draw()
     
     def on_key_press(self, key, key_modifiers):
          self.world.on_key_press(key, key_modifiers)
