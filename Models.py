@@ -1,5 +1,6 @@
 import arcade
 from random import randint
+import time
 
 MOVEMENT_SPEED = 5
 MOVEMENT_BULLET_SPEED = 12
@@ -53,21 +54,28 @@ class Enemy:
         self.direction = DIR_DOWN
         self.enemy_list = []
 
-    def move(self, direction):
-        self.horizon += MOVEMENT_SPEED * DIR_OFFSETS[direction][0]
-        self.vertical += MOVEMENT_SPEED * DIR_OFFSETS[direction][1]
+    # def move(self, direction):
+    #     self.horizon += MOVEMENT_SPEED * DIR_OFFSETS[direction][0]
+    #     self.vertical += MOVEMENT_SPEED * DIR_OFFSETS[direction][1]
     
     def random_direction(self, direction):
-        x = randint(1,2)
-        if x == 1:
-            self.direction = DIR_LEFT
-        elif x == 2:
-            self.direction = DIR_RIGHT
+        self.horizon += MOVEMENT_SPEED * DIR_OFFSETS[direction][0]
+        self.vertical += MOVEMENT_SPEED * DIR_OFFSETS[direction][1]
+        start_time = time.time()
+        end = time.time() - start_time
+        if end%1 == 0 and end != 0:
+            x = randint(1,3)
+            if x == 1:
+                self.direction = DIR_LEFT
+            elif x == 2:
+                self.direction = DIR_RIGHT
+            elif x == 3:
+                self.direction = DIR_DOWN
+        elif end > 500:
+            self.direction = DIR_DOWN
     
     def update(self, delta):
-        self.move(self.direction)
-        # self.random_direction(self.direction)
-    
+        self.random_direction(self.direction)
 
 class World:
     def __init__(self, width, height):
@@ -76,7 +84,7 @@ class World:
 
         self.ship = Ship(self, 250, 50)
         self.bullet = Bullet(self,self.ship.horizon ,self.ship.vertical)
-        self.enemy = Enemy(self, 250, 650)
+        self.enemy = Enemy(self, randint(50,450), 850)
         self.on_press = []
         self.bullet_list = []
 
