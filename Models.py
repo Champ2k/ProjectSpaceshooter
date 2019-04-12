@@ -53,10 +53,6 @@ class Enemy:
         self.vertical = Vertical
         self.direction = DIR_DOWN
         self.enemy_list = []
-
-    # def move(self, direction):
-    #     self.horizon += MOVEMENT_SPEED * DIR_OFFSETS[direction][0]
-    #     self.vertical += MOVEMENT_SPEED * DIR_OFFSETS[direction][1]
     
     def random_direction(self, direction):
         self.horizon += MOVEMENT_SPEED * DIR_OFFSETS[direction][0]
