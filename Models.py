@@ -83,6 +83,7 @@ class World:
         self.enemy = Enemy(self, randint(50,450), 850)
         self.on_press = []
         self.bullet_list = []
+        self.enemy_list = []
         
 
         self.has_shoot = False
