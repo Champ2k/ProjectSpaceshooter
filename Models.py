@@ -1,6 +1,6 @@
 import arcade
-from random import randint
-import time
+from random import randint, choice
+from crashdetect import check_crash
 
 MOVEMENT_SPEED = 5
 MOVEMENT_BULLET_SPEED = 12
@@ -26,13 +26,26 @@ class Ship:
         self.horizon = horizon
         self.vertical = vertical
         self.direction = DIR_STILL
+        # self.next_direction = DIR_STILL
 
     def control(self, direction):
          self.horizon += MOVEMENT_SPEED * DIR_OFFSETS[direction][0]
          self.vertical += MOVEMENT_SPEED * DIR_OFFSETS[direction][1]
+        
+    def out_of_world(self):
+        if self.horizon > 550:
+            self.horizon = -50
+        elif self.horizon < -50:
+            self.horizon = 550
+        if self.vertical <= 26:
+            self.vertical = 24
+        elif self.vertical > 720:
+            self.vertical = 720
     
     def update(self, delta):
+        self.out_of_world()
         self.control(self.direction)
+
 
 class Bullet:
     def __init__(self,world, Horizon, Vertical):
@@ -52,23 +65,13 @@ class Enemy:
         self.horizon = Horizon
         self.vertical = Vertical
         self.direction = DIR_DOWN
-        self.enemy_list = []
+        self.hp = 3
     
     def random_direction(self, direction):
-        self.horizon += MOVEMENT_SPEED * DIR_OFFSETS[direction][0]
         self.vertical += MOVEMENT_SPEED * DIR_OFFSETS[direction][1]
-        start_time = time.time()
-        end = time.time() - start_time
-        if end%1 == 0 and end != 0:
-            x = randint(1,3)
-            if x == 1:
-                self.direction = DIR_LEFT
-            elif x == 2:
-                self.direction = DIR_RIGHT
-            elif x == 3:
-                self.direction = DIR_DOWN
-        elif end > 500:
-            self.direction = DIR_DOWN
+    
+    def if_hit(self, bullet):
+        return check_crash(bullet.horizon, bullet.vertical, self.horizon, self.vertical)
     
     def update(self, delta):
         self.random_direction(self.direction)
@@ -92,6 +95,7 @@ class World:
         if key in KEY_MAP:
             self.ship.direction = KEY_MAP[key]
             self.on_press.append(KEY_MAP[key])
+
         if key == arcade.key.SPACE:
             self.bullet = Bullet(self,self.ship.horizon ,self.ship.vertical+25)
             self.has_shoot = True
@@ -115,12 +119,36 @@ class World:
         else:
             return True
 
+    def gen_enemy(self):
+        if self.enemy_list == []:
+            for i in range(randint(1,5)):
+                self.enemy = Enemy(self, self.random_num(), 850)
+                self.enemy_list.append(self.enemy)
+        if self.enemy_list[-1].vertical == -25:
+            self.enemy_list = []        
+
+    def random_num(self):
+        list_check = [50,100,150,200,250,300,350,400,450]
+        x = choice(list_check)
+        return x
+    
+    # def kill(self):
+    #     for i in self.enemy_list:
+    #         if self.bullet_list != []:
+    #                 for bullet in self.bullet_list:
+    #                     if i.if_hit(bullet):
+    #                         self.enemy_list.remove(i)
+    #                         self.bullet_list.remove(bullet)
+
     def update(self, delta):
         self.ship.update(delta)
         for i in self.bullet_list:
             i.update(delta)
-        self.enemy.update(delta)
-        
-
-    
-
+        for i in self.enemy_list:
+            i.update(delta)
+            # self.kill()
+            if self.bullet_list != []:
+                for bullet in self.bullet_list:
+                    if i.if_hit(bullet):
+                        self.bullet_list.remove(bullet)
+                        self.enemy_list.remove(i)

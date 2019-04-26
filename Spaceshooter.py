@@ -1,4 +1,5 @@
 import arcade
+from crashdetect import *
 from Models import World,Ship,Bullet,Enemy
 
 
@@ -29,8 +30,15 @@ class SpaceWindow(arcade.Window):
         self.Shipsprite.draw()
 
         self.draw_shoot()
-        
-        self.Enemysprite.draw()
+
+        self.draw_enemy()
+    
+    def draw_enemy(self):
+        self.world.gen_enemy()
+        for i in self.world.enemy_list:
+            ModelSprite('Character\Enemy1.png',
+                                        model=i).draw()
+
     
     def draw_shoot(self):
         for i in self.world.bullet_list:
