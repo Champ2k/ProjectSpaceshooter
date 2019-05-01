@@ -3,6 +3,7 @@ from random import randint, choice
 from crashdetect import check_crash
 
 MOVEMENT_SPEED = 5
+MOVEMENT_ENEMY_SPEED = 3
 MOVEMENT_BULLET_SPEED = 12
 DIR_STILL = 0
 DIR_UP = 1
@@ -26,7 +27,7 @@ class Ship:
         self.horizon = horizon
         self.vertical = vertical
         self.direction = DIR_STILL
-        # self.next_direction = DIR_STILL
+        self.hp = 5
 
     def control(self, direction):
          self.horizon += MOVEMENT_SPEED * DIR_OFFSETS[direction][0]
@@ -41,6 +42,13 @@ class Ship:
             self.vertical = 24
         elif self.vertical > 720:
             self.vertical = 720
+    
+    def check_hp(self):
+        for i in self.world.enemy_list:
+            if i.vertical <= -25:
+                self.hp -= 1
+            if self.hp == 0:
+                self.world.die()
     
     def update(self, delta):
         self.out_of_world()
@@ -65,21 +73,26 @@ class Enemy:
         self.horizon = Horizon
         self.vertical = Vertical
         self.direction = DIR_DOWN
-        self.hp = 3
+
+    def random_direction(self,morespeed, direction):
+        self.vertical += (MOVEMENT_ENEMY_SPEED+morespeed) * DIR_OFFSETS[direction][1]
     
-    def random_direction(self, direction):
-        self.vertical += MOVEMENT_SPEED * DIR_OFFSETS[direction][1]
     
     def if_hit(self, bullet):
         return check_crash(bullet.horizon, bullet.vertical, self.horizon, self.vertical)
     
     def update(self, delta):
-        self.random_direction(self.direction)
+        self.random_direction(self.world.morespeed,self.direction)
 
 class World:
+    STATE_FROZEN = 1
+    STATE_STARTED = 2
+    STATE_DEAD = 3
+    
     def __init__(self, width, height):
         self.width = width
         self.height = height
+        self.state = World.STATE_FROZEN
 
         self.ship = Ship(self, 250, 50)
         self.bullet = Bullet(self,self.ship.horizon ,self.ship.vertical)
@@ -87,9 +100,10 @@ class World:
         self.on_press = []
         self.bullet_list = []
         self.enemy_list = []
-        
+        self.morespeed = 0
 
         self.has_shoot = False
+            
     
     def on_key_press(self, key, key_modifiers):
         if key in KEY_MAP:
@@ -124,23 +138,34 @@ class World:
             for i in range(randint(1,5)):
                 self.enemy = Enemy(self, self.random_num(), 850)
                 self.enemy_list.append(self.enemy)
-        if self.enemy_list[-1].vertical == -25:
-            self.enemy_list = []        
+            self.morespeed += 0.2   
+        if self.enemy_list[-1].vertical <= -25:
+            self.ship.check_hp()
+            self.enemy_list = []     
 
     def random_num(self):
         list_check = [50,100,150,200,250,300,350,400,450]
         x = choice(list_check)
         return x
-    
-    # def kill(self):
-    #     for i in self.enemy_list:
-    #         if self.bullet_list != []:
-    #                 for bullet in self.bullet_list:
-    #                     if i.if_hit(bullet):
-    #                         self.enemy_list.remove(i)
-    #                         self.bullet_list.remove(bullet)
+
+    def start(self):
+        self.state = World.STATE_STARTED
+
+    def freeze(self):
+        self.state = World.STATE_FROZEN     
+
+    def is_started(self):
+        return self.state == World.STATE_STARTED
+
+    def die(self):
+        self.state = World.STATE_DEAD
+
+    def is_dead(self):
+        return self.state == World.STATE_DEAD 
 
     def update(self, delta):
+        if self.state in [World.STATE_FROZEN, World.STATE_DEAD]:
+            return
         self.ship.update(delta)
         for i in self.bullet_list:
             i.update(delta)

@@ -47,9 +47,23 @@ class SpaceWindow(arcade.Window):
     
     def on_key_press(self, key, key_modifiers):
          self.world.on_key_press(key, key_modifiers)
+         if not self.world.is_dead():
+             self.world.start()
     
     def on_key_release(self, key, key_modifiers):
         self.world.on_key_release(key, key_modifiers)
+
+    def game_over_draw(self):
+        """
+        Draw "Game Over" across the screen
+        """
+        output = "GameOver"
+        arcade.draw_text(output,250,375,arcade.Color.WHITE,60)
+
+
+    def check_state(self):
+        if self.world.state == World.state.DEAD:
+            self.draw_game_over()
 
     def update(self, delta):
         self.world.update(delta)
