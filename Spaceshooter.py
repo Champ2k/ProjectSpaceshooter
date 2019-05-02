@@ -32,6 +32,8 @@ class SpaceWindow(arcade.Window):
         self.draw_shoot()
 
         self.draw_enemy()
+        
+        self.check_state()
     
     def draw_enemy(self):
         self.world.gen_enemy()
@@ -54,16 +56,22 @@ class SpaceWindow(arcade.Window):
         self.world.on_key_release(key, key_modifiers)
 
     def game_over_draw(self):
-        """
-        Draw "Game Over" across the screen
-        """
+        
         output = "GameOver"
-        arcade.draw_text(output,250,375,arcade.Color.WHITE,60)
+        arcade.draw_text(output,173,350,arcade.color.WHITE,30)
 
+    def game_start_draw(self):
+        
+        output = "Press any keys"
+        output_2 = "To start"
+        arcade.draw_text(output,150,380,arcade.color.WHITE,30)
+        arcade.draw_text(output_2,200,330,arcade.color.WHITE,30)
 
     def check_state(self):
-        if self.world.state == World.state.DEAD:
-            self.draw_game_over()
+        if self.world.state == World.STATE_DEAD:
+            self.game_over_draw()
+        if self.world.state == World.STATE_FROZEN:
+            self.game_start_draw()
 
     def update(self, delta):
         self.world.update(delta)
