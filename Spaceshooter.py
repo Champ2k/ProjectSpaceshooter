@@ -21,6 +21,8 @@ class SpaceWindow(arcade.Window):
         
         self.Enemysprite = ModelSprite('Character\Enemy1.png',
                                         model=self.world.enemy)
+        
+        self.set_update_rate(1/70)
 
     def on_draw(self):
         arcade.start_render()
