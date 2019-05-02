@@ -1,6 +1,7 @@
 import arcade
 from random import randint, choice
-from crashdetect import check_crash
+from crashdetect import check_crash, check_crash_ship
+import time
 
 MOVEMENT_SPEED = 5
 MOVEMENT_ENEMY_SPEED = 3
@@ -49,6 +50,9 @@ class Ship:
                 self.hp -= 1
             if self.hp == 0:
                 self.world.die()
+
+    def if_hit(self, enemy):
+        return check_crash_ship(self.horizon, self.vertical, enemy.horizon, enemy.vertical)
     
     def update(self, delta):
         self.out_of_world()
@@ -101,6 +105,9 @@ class World:
         self.bullet_list = []
         self.enemy_list = []
         self.morespeed = 0
+        self.score = 0
+        self.count_time = 0
+        self.time = 0
 
         self.has_shoot = False
             
@@ -163,17 +170,29 @@ class World:
     def is_dead(self):
         return self.state == World.STATE_DEAD 
 
+    def Score(self):
+        self.count_time += 1
+        if self.count_time == 60:
+            self.time += 1
+            self.score = int(self.time * (self.morespeed*5))
+            self.count_time = 0
+
     def update(self, delta):
         if self.state in [World.STATE_FROZEN, World.STATE_DEAD]:
             return
         self.ship.update(delta)
+        self.Score()
         for i in self.bullet_list:
             i.update(delta)
         for i in self.enemy_list:
             i.update(delta)
-            # self.kill()
             if self.bullet_list != []:
                 for bullet in self.bullet_list:
                     if i.if_hit(bullet):
                         self.bullet_list.remove(bullet)
                         self.enemy_list.remove(i)
+            if self.ship.if_hit(i):
+                self.enemy_list.remove(i)
+                self.ship.hp -= 1
+                if self.ship.hp == 0:
+                    self.die()

@@ -3,3 +3,9 @@ def check_crash(bullet_x, bullet_y, enemy_x, enemy_y):
         return True
     else:
         return False
+
+def check_crash_ship(player_x, player_y, enemy_x, enemy_y):
+    if enemy_x - 26 < player_x < enemy_x + 26 and enemy_y - 33 < player_y < enemy_y + 33: 
+        return True
+    else:
+        return False

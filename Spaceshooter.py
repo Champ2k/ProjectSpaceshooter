@@ -34,6 +34,8 @@ class SpaceWindow(arcade.Window):
         self.draw_enemy()
         
         self.check_state()
+
+        self.score_draw()
     
     def draw_enemy(self):
         self.world.gen_enemy()
@@ -66,6 +68,10 @@ class SpaceWindow(arcade.Window):
         output_2 = "To start"
         arcade.draw_text(output,150,380,arcade.color.WHITE,30)
         arcade.draw_text(output_2,200,330,arcade.color.WHITE,30)
+    
+    def score_draw(self):
+        output = f"Score {self.world.score}"
+        arcade.draw_text(output,380,700,arcade.color.WHITE,20)
 
     def check_state(self):
         if self.world.state == World.STATE_DEAD:
