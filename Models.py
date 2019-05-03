@@ -174,7 +174,7 @@ class World:
         self.count_time += 1
         if self.count_time == 60:
             self.time += 1
-            self.score = int(self.time * (self.morespeed*5))
+            self.score = int(self.time)
             self.count_time = 0
 
     def update(self, delta):

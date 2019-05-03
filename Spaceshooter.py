@@ -72,7 +72,7 @@ class SpaceWindow(arcade.Window):
         arcade.draw_text(output_2,200,330,arcade.color.WHITE,30)
     
     def score_draw(self):
-        output = f"Score {self.world.score}"
+        output = f"Time: {self.world.score}"
         arcade.draw_text(output,380,700,arcade.color.WHITE,20)
 
     def check_state(self):
