@@ -22,6 +22,12 @@ class SpaceWindow(arcade.Window):
         self.Enemysprite = ModelSprite('Character\Enemy1.png',
                                         model=self.world.enemy)
         
+        self.Bonussprite= ModelSprite('Character\Bonus.jpg',
+                                        model=self.world.bonus)
+        
+        # self.EnemyBulletsprite = ModelSprite('Character\Bullet.png',
+                                            # model=self.world.bullet)
+        
         self.set_update_rate(1/70)
 
     def on_draw(self):
@@ -38,6 +44,10 @@ class SpaceWindow(arcade.Window):
         self.check_state()
 
         self.score_draw()
+
+        self.draw_bonus()
+
+        # self.EnemyBulletsprite.draw()
     
     def draw_enemy(self):
         self.world.gen_enemy()
@@ -50,6 +60,13 @@ class SpaceWindow(arcade.Window):
         for i in self.world.bullet_list:
             ModelSprite('Character\Bullet.png',
                                         model=i).draw()
+    
+    def draw_bonus(self):
+        self.world.gen_bonus()
+        for i in self.world.bonus_list:
+            ModelSprite('Character\Bonus.jpg',
+                                        model=i).draw()
+            
     
     def on_key_press(self, key, key_modifiers):
          self.world.on_key_press(key, key_modifiers)
@@ -92,7 +109,7 @@ class ModelSprite(arcade.Sprite):
 
     def sync_with_model(self):
         if self.model:
-            self.set_position(self.model.horizon, self.model.vertical)
+            self.set_position(self.model.x, self.model.y)
 
     def draw(self):
         self.sync_with_model()
