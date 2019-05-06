@@ -66,6 +66,15 @@ class SpaceWindow(arcade.Window):
         for i in self.world.bonus_list:
             ModelSprite('Character\Bonus.jpg',
                                         model=i).draw()
+    
+    # def draw_hp(self):
+    #     for i in self.world.hp_list:
+    #         ModelSprite(f"{self.world.heart}",
+    #                                     model=i).draw()
+
+    # def draw_hp(self):
+    #     pat1 = ["Character\Heart.jpg", "Character\Heart.jpg", "Character\Heart.jpg", 
+    #         "Character\Heart.jpg", "Character\Heart.jpg"]
             
     
     def on_key_press(self, key, key_modifiers):
@@ -89,7 +98,7 @@ class SpaceWindow(arcade.Window):
         arcade.draw_text(output_2,200,330,arcade.color.WHITE,30)
     
     def score_draw(self):
-        output = f"Time: {self.world.score}"
+        output = f"Score: {self.world.score}"
         arcade.draw_text(output,380,700,arcade.color.WHITE,20)
 
     def check_state(self):

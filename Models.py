@@ -130,19 +130,22 @@ class World:
 
         self.ship = Ship(self, 250, 50)
         self.bullet = Bullet(self,self.ship.x ,self.ship.y)
-        self.enemy = Enemy(self, self.random_num(), 850)
+        self.enemy = Enemy(self, randint(50,450), 850)
         # self.enemybullet = EnemyBullet(self, self.enemy.x, self.enemy.y)
         self.bonus = Bonus(self,randint(50,450), 800)
         self.on_press = []
         self.bullet_list = []
         self.enemy_list = []
         self.bonus_list = []
+        self.list_check_enemy = [50,100,150,200,250,300,350,400,450]
+        # self.hp_list = [1,2,3,4,5]
         self.morespeed = 0
         self.score = 0
         self.count_time = 0
         self.time = 0
         self.bonus_speed = 0
         self.count_bonus_time = 0
+        # self.heart = "Character\Heart.jpg"
 
         self.check_bonus = False
         self.has_shoot = False
@@ -152,7 +155,6 @@ class World:
         if key in KEY_MAP:
             self.ship.direction = KEY_MAP[key]
             self.on_press.append(KEY_MAP[key])
-
         if key == arcade.key.SPACE:
             self.bullet = Bullet(self,self.ship.x ,self.ship.y+25)
             self.has_shoot = True
@@ -178,9 +180,16 @@ class World:
 
     def gen_enemy(self):
         if self.enemy_list == []:
-            for i in range(randint(1,5)):
-                self.enemy = Enemy(self, self.random_num(), 850)
+            random = randint(1,5)
+            for i in range(random):
+                x = choice(self.list_check_enemy)
+                self.list_check_enemy.remove(x)
+                print(x)
+                print(self.list_check_enemy)
+                self.enemy = Enemy(self, x, 850)
                 self.enemy_list.append(self.enemy)
+                if i+1 == random:
+                    self.list_check_enemy = [50,100,150,200,250,300,350,400,450]
             self.morespeed += 0.2
         if self.enemy_list[-1].y <= -25:
             self.ship.check_hp()
@@ -188,16 +197,10 @@ class World:
 
     def gen_bonus(self):
         if self.time%23 == 3:
-            if self.bonus_list == []:
-                self.bonus = Bonus(self,randint(50,450), 800)
-                self.bonus_list.append(self.bonus)
+            self.bonus = Bonus(self,randint(50,450), 800)
+            self.bonus_list.append(self.bonus)
             if self.bonus_list[-1].y <= -25:
                 self.bonus_list = []
-                
-    def random_num(self):
-        list_check = [50,100,150,200,250,300,350,400,450]
-        x = choice(list_check)
-        return x
 
     def start(self):
         self.state = World.STATE_STARTED
@@ -214,13 +217,19 @@ class World:
     def is_dead(self):
         return self.state == World.STATE_DEAD 
 
-    def Score(self):
+    # def Score(self):
+    #     self.count_time += 1
+    #     if self.count_time == 60:
+    #         self.time += 1
+    #         self.score = int(self.time)
+    #         self.count_time = 0
+
+    def counting_time(self):
         self.count_time += 1
         if self.count_time == 60:
             self.time += 1
-            self.score = int(self.time)
             self.count_time = 0
-    
+
     def check_bonus_hit(self):
         if self.bonus.if_hit(self.ship):
             for i in self.bonus_list:
@@ -237,12 +246,12 @@ class World:
                 self.count_bonus_time = 0
                 self.check_bonus = False
 
-
     def update(self, delta):
         if self.state in [World.STATE_FROZEN, World.STATE_DEAD]:
             return
         self.ship.update(delta)
-        self.Score()
+        # self.Score()
+        self.counting_time()
         self.bonus.update(delta)
         self.check_bonus_hit()
         # self.enemybullet.update(delta)
@@ -255,6 +264,7 @@ class World:
                     if i.if_hit(bullet):
                         self.bullet_list.remove(bullet)
                         self.enemy_list.remove(i)
+                        self.score += 1
             if self.ship.if_hit(i) and self.enemy_list != []:
                 self.enemy_list.remove(i)
                 self.ship.hp -= 1
