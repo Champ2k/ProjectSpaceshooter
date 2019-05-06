@@ -72,17 +72,17 @@ class Bullet:
     def update(self, delta):
         self.shoot(DIR_UP)
 
-class EnemyBullet:
-    def __init__(self, world, x, y):
-        self.world = world
-        self.x = x
-        self.y = y
+# class EnemyBullet:
+#     def __init__(self, world, x, y):
+#         self.world = world
+#         self.x = x
+#         self.y = y
 
-    def enemy_shoot(self, direction):
-        self.y += MOVEMENT_BONUS_SPEED * DIR_OFFSETS[direction][1]
+#     def enemy_shoot(self, direction):
+#         self.y += MOVEMENT_BONUS_SPEED * DIR_OFFSETS[direction][1]
 
-    def update(self, delta):
-        self.enemy_shoot(DIR_DOWN)
+#     def update(self, delta):
+#         self.enemy_shoot(DIR_DOWN)
 
 class Enemy:
     def __init__(self, world, x, y):
@@ -217,13 +217,6 @@ class World:
     def is_dead(self):
         return self.state == World.STATE_DEAD 
 
-    # def Score(self):
-    #     self.count_time += 1
-    #     if self.count_time == 60:
-    #         self.time += 1
-    #         self.score = int(self.time)
-    #         self.count_time = 0
-
     def counting_time(self):
         self.count_time += 1
         if self.count_time == 60:
@@ -250,11 +243,10 @@ class World:
         if self.state in [World.STATE_FROZEN, World.STATE_DEAD]:
             return
         self.ship.update(delta)
-        # self.Score()
         self.counting_time()
         self.bonus.update(delta)
-        self.check_bonus_hit()
-        # self.enemybullet.update(delta)
+        if self.bonus_list != []:
+            self.check_bonus_hit()
         for i in self.bullet_list:
             i.update(delta)
         for i in self.enemy_list:

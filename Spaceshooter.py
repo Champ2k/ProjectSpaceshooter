@@ -46,7 +46,7 @@ class SpaceWindow(arcade.Window):
         self.score_draw()
 
         self.draw_bonus()
-
+        
         # self.EnemyBulletsprite.draw()
     
     def draw_enemy(self):
@@ -75,6 +75,12 @@ class SpaceWindow(arcade.Window):
     # def draw_hp(self):
     #     pat1 = ["Character\Heart.jpg", "Character\Heart.jpg", "Character\Heart.jpg", 
     #         "Character\Heart.jpg", "Character\Heart.jpg"]
+
+    # def hp_draw(self):
+    #     heart = ModelSprite("Character\Heart.jpg",
+    #                                     model=self.world.bullet)
+    #     output = f"{heart.draw()} x {self.world.ship.hp}"
+    #     arcade.draw_text(output, 50, 700, arcade.color.WHITE,20)
             
     
     def on_key_press(self, key, key_modifiers):
