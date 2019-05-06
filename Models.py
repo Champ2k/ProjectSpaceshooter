@@ -184,8 +184,6 @@ class World:
             for i in range(random):
                 x = choice(self.list_check_enemy)
                 self.list_check_enemy.remove(x)
-                print(x)
-                print(self.list_check_enemy)
                 self.enemy = Enemy(self, x, 850)
                 self.enemy_list.append(self.enemy)
                 if i+1 == random:
