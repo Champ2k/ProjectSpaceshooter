@@ -159,6 +159,8 @@ class World:
             self.bullet = Bullet(self,self.ship.x ,self.ship.y+25)
             self.has_shoot = True
             self.bullet_list.append(self.bullet)
+            shoot_sound = arcade.sound.load_sound("shoot sound.mp3")
+            arcade.sound.play_sound(shoot_sound)
 
     
     def on_key_release(self, key, key_modifiers):
@@ -182,9 +184,9 @@ class World:
         if self.enemy_list == []:
             random = randint(1,5)
             for i in range(random):
-                x = choice(self.list_check_enemy)
-                self.list_check_enemy.remove(x)
-                self.enemy = Enemy(self, x, 850)
+                choose = choice(self.list_check_enemy)
+                self.list_check_enemy.remove(choose)
+                self.enemy = Enemy(self, choose, 850)
                 self.enemy_list.append(self.enemy)
                 if i+1 == random:
                     self.list_check_enemy = [50,100,150,200,250,300,350,400,450]
