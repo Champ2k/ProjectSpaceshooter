@@ -11,7 +11,7 @@ def check_crash_ship(player_x, player_y, enemy_x, enemy_y):
         return False
 
 def check_crash_bonus(player_x, player_y, bonus_x, bonus_y):
-    if bonus_x - 25 < player_x < bonus_x + 25 and bonus_y - 22 < player_y < bonus_y + 22: 
+    if bonus_x - 26 < player_x < bonus_x + 26 and bonus_y - 25 < player_y < bonus_y + 25: 
         return True
     else:
         return False

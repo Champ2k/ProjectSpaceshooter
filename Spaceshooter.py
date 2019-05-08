@@ -1,6 +1,6 @@
 import arcade
 from crashdetect import *
-from Models import World,Ship,Bullet,Enemy
+from Models import World, Ship, Bullet, Enemy, FPSCounter, Heart
 
 
 WIDTH = 500
@@ -22,13 +22,15 @@ class SpaceWindow(arcade.Window):
         self.Enemysprite = ModelSprite('Character\Enemy1.png',
                                         model=self.world.enemy)
         
-        self.Bonussprite= ModelSprite('Character\Bonus.jpg',
+        self.Bonussprite= ModelSprite('Character\Bonus.png',
                                         model=self.world.bonus)
         
         # self.EnemyBulletsprite = ModelSprite('Character\Bullet.png',
                                             # model=self.world.bullet)
         
         self.set_update_rate(1/70)
+
+        self.fps = FPSCounter()
 
     def on_draw(self):
         arcade.start_render()
@@ -40,15 +42,21 @@ class SpaceWindow(arcade.Window):
         self.draw_shoot()
 
         self.draw_enemy()
+
+        self.draw_hp()
         
         self.check_state()
 
         self.score_draw()
 
         self.draw_bonus()
+
+        self.fps.tick()
+
+        arcade.draw_text(f'{self.fps.get_fps():.0f}', WIDTH - 70, HEIGHT - 80, arcade.color.WHITE, 20)
         
         # self.EnemyBulletsprite.draw()
-    
+
     def draw_enemy(self):
         self.world.gen_enemy()
         for i in self.world.enemy_list:
@@ -64,24 +72,18 @@ class SpaceWindow(arcade.Window):
     def draw_bonus(self):
         self.world.gen_bonus()
         for i in self.world.bonus_list:
-            ModelSprite('Character\Bonus.jpg',
+            ModelSprite('Character\Bonus.png',
                                         model=i).draw()
     
-    # def draw_hp(self):
-    #     for i in self.world.hp_list:
-    #         ModelSprite(f"{self.world.heart}",
-    #                                     model=i).draw()
-
-    # def draw_hp(self):
-    #     pat1 = ["Character\Heart.jpg", "Character\Heart.jpg", "Character\Heart.jpg", 
-    #         "Character\Heart.jpg", "Character\Heart.jpg"]
-
-    # def hp_draw(self):
-    #     heart = ModelSprite("Character\Heart.jpg",
-    #                                     model=self.world.bullet)
-    #     output = f"{heart.draw()} x {self.world.ship.hp}"
-    #     arcade.draw_text(output, 50, 700, arcade.color.WHITE,20)
+    def draw_hp(self):
+        for i in self.world.hp_list:
+            if i.has_live:
+                ModelSprite("Character\Full Heart.png",
+                                            model=i).draw()
             
+            else:
+                ModelSprite("Character\Empty Heart.png",
+                                            model=i).draw()
     
     def on_key_press(self, key, key_modifiers):
          self.world.on_key_press(key, key_modifiers)
