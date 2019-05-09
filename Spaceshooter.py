@@ -53,7 +53,7 @@ class SpaceWindow(arcade.Window):
 
         self.fps.tick()
 
-        arcade.draw_text(f'{self.fps.get_fps():.0f}', WIDTH - 70, HEIGHT - 80, arcade.color.WHITE, 20)
+        arcade.draw_text(f'FPS: {self.fps.get_fps():.0f}', WIDTH - 40, HEIGHT - 15, arcade.color.WHITE, 10)
         
         # self.EnemyBulletsprite.draw()
 
@@ -80,11 +80,7 @@ class SpaceWindow(arcade.Window):
             if i.has_live:
                 ModelSprite("Character\Full Heart.png",
                                             model=i).draw()
-            
-            else:
-                ModelSprite("Character\Empty Heart.png",
-                                            model=i).draw()
-    
+
     def on_key_press(self, key, key_modifiers):
          self.world.on_key_press(key, key_modifiers)
          if not self.world.is_dead():

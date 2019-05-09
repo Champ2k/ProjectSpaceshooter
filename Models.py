@@ -49,8 +49,9 @@ class Ship:
         for i in self.world.enemy_list:
             if i.y <= -25:
                 self.hp -= 1
-                self.world.heart.has_live = False
-                self.world.hp_list.pop(-1)
+                if self.world.hp_list != []:
+                    self.world.heart.has_live = False
+                    self.world.hp_list.pop(-1)
             if self.hp == 0:
                 self.world.die()
 
@@ -90,11 +91,11 @@ class Bullet:
 #         self.enemy_shoot(DIR_DOWN)
 
 class Heart:
-    def __init__(self, world, x, y, has_live=True):
+    def __init__(self, world, x, y):
         self.world = world
         self.x = x
         self.y = y
-        self.has_live = has_live
+        self.has_live = True
     
     # def del_heart(self):
         # for i in self.world.enemy_list:
@@ -155,7 +156,7 @@ class World:
         self.enemy = Enemy(self, randint(50,450), 850)
         # self.enemybullet = EnemyBullet(self, self.enemy.x, self.enemy.y)
         self.bonus = Bonus(self, randint(50,450), 800)
-        self.heart = Heart(self, 0 ,0, True)
+        self.heart = Heart(self, 0 ,0)
 
         self.on_press = []
         self.bullet_list = []
@@ -306,9 +307,9 @@ class World:
             if self.ship.if_hit(i) and self.enemy_list != []:
                 self.enemy_list.remove(i)
                 self.ship.hp -= 1
-                self.heart.has_live = False
-                self.hp_list.pop(-1)
-                print(len(self.hp_list))
+                if self.hp_list != []:
+                    self.heart.has_live = False
+                    self.hp_list.pop(-1)
                 if self.ship.hp == 0:
                     self.die()
 
