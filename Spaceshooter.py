@@ -1,6 +1,6 @@
 import arcade
-from crashdetect import *
-from Models import World, Ship, Bullet, Enemy, FPSCounter, Heart
+from Models import World, Ship, Bullet, Enemy, Heart
+from Fps import FPSCounter
 
 
 WIDTH = 500
@@ -54,7 +54,7 @@ class SpaceWindow(arcade.Window):
 
         self.fps.tick()
 
-        arcade.draw_text(f'FPS: {self.fps.get_fps():.0f}', WIDTH - 40, HEIGHT - 15, arcade.color.WHITE, 10)
+        arcade.draw_text(f'FPS: {self.fps.get_fps():.0f}', WIDTH - 40, HEIGHT - 20, arcade.color.WHITE, 10)
 
     def draw_enemy(self):
         self.world.gen_enemy()
@@ -62,7 +62,6 @@ class SpaceWindow(arcade.Window):
             ModelSprite('Character\Enemy1.png',
                                         model=i).draw()
 
-    
     def draw_shoot(self):
         for i in self.world.bullet_list:
             ModelSprite('Character\Bullet.png',
@@ -91,26 +90,24 @@ class SpaceWindow(arcade.Window):
         self.world.on_key_release(key, key_modifiers)
 
     def game_over_draw(self):
-        
         output = "GameOver"
         output_2 = "Press R to play again"
         output_3 = f"Total time : {self.world.time}"
         output_4 = f"Total Score: {self.world.score}"
-        arcade.draw_text(output, WIDTH-317, HEIGHT-330, arcade.color.WHITE, 25)
+        arcade.draw_text(output, WIDTH-315, HEIGHT-325, arcade.color.WHITE, 25)
         arcade.draw_text(output_3, WIDTH-334, HEIGHT-360, arcade.color.WHITE, 25)
-        arcade.draw_text(output_4, WIDTH-334, HEIGHT-390, arcade.color.WHITE, 25)
-        arcade.draw_text(output_2, WIDTH-373, HEIGHT-425, arcade.color.WHITE, 25)
+        arcade.draw_text(output_4, WIDTH-334, HEIGHT-395, arcade.color.WHITE, 25)
+        arcade.draw_text(output_2, WIDTH-373, HEIGHT-430, arcade.color.WHITE, 25)
 
     def game_start_draw(self):
-        
         output = "Press any keys"
         output_2 = "To start"
-        arcade.draw_text(output,150,380,arcade.color.WHITE,30)
-        arcade.draw_text(output_2,200,330,arcade.color.WHITE,30)
+        arcade.draw_text(output, WIDTH - 350, (HEIGHT/2) + 20, arcade.color.WHITE,30)
+        arcade.draw_text(output_2, WIDTH - 300, (HEIGHT/2) - 20, arcade.color.WHITE,30)
     
     def score_draw(self):
         output = f"Score: {self.world.score}"
-        arcade.draw_text(output,380,700,arcade.color.WHITE,20)
+        arcade.draw_text(output, WIDTH - 130, HEIGHT - 25, arcade.color.WHITE,20)
 
     def check_state(self):
         if self.world.state == World.STATE_DEAD:
@@ -120,6 +117,7 @@ class SpaceWindow(arcade.Window):
 
     def update(self, delta):
         self.world.update(delta)
+
 
 class ModelSprite(arcade.Sprite):
     def __init__(self, *args, **kwargs):

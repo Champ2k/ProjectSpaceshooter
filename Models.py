@@ -1,7 +1,7 @@
 import arcade
 from random import randint, choice
 from crashdetect import check_crash, check_crash_ship, check_crash_bonus
-import time, collections
+import time
 
 MOVEMENT_SPEED = 5
 MOVEMENT_ENEMY_SPEED = 3
@@ -78,6 +78,7 @@ class Bullet:
         if self.y >= self.world.height:
             self.world.bullet_list.pop(0)
 
+
 class Heart:
     def __init__(self, world, x, y):
         self.world = world
@@ -87,6 +88,7 @@ class Heart:
 
     def update(self, delta):
         pass
+
 
 class Enemy:
     def __init__(self, world, x, y):
@@ -98,12 +100,12 @@ class Enemy:
     def random_direction(self,morespeed, direction):
         self.y += (MOVEMENT_ENEMY_SPEED+morespeed) * DIR_OFFSETS[direction][1]
     
-    
     def if_hit(self, bullet):
         return check_crash(bullet.x, bullet.y, self.x, self.y)
     
     def update(self, delta):
         self.random_direction(self.world.morespeed,self.direction)
+
 
 class Bonus:
     def __init__(self, world, x, y):
@@ -142,10 +144,8 @@ class World:
         self.bullet_list = []
         self.enemy_list = []
         self.bonus_list = []
-        self.list_check_enemy = [50,100,150,200,250,300,350,400,450]
-
         self.hp_list = []
-        self.gen_full_hp()
+        self.list_check_enemy = [50,100,150,200,250,300,350,400,450]
 
         self.morespeed = 0
         self.score = 0
@@ -156,21 +156,21 @@ class World:
 
         self.check_bonus = False
         self.has_shoot = False
-            
-    
+
+        self.gen_full_hp()
+
     def on_key_press(self, key, key_modifiers):
         if key in KEY_MAP:
             self.ship.direction = KEY_MAP[key]
             self.on_press.append(KEY_MAP[key])
-        if key == arcade.key.SPACE:
+        if key == arcade.key.SPACE and self.state != World.STATE_DEAD:
             self.bullet = Bullet(self,self.ship.x ,self.ship.y+25)
             self.has_shoot = True
             self.bullet_list.append(self.bullet)
             if not self.is_dead():
                 shoot_sound = arcade.sound.load_sound("shoot sound.mp3")
                 arcade.sound.play_sound(shoot_sound)
-
-    
+   
     def on_key_release(self, key, key_modifiers):
         if key in KEY_MAP:
             self.on_press.remove(KEY_MAP[key])
@@ -192,7 +192,7 @@ class World:
         listx = [50,75,100,125,150]
         if self.ship.hp != 0 and self.ship.hp <= 5:
             for i in range(self.ship.hp):
-                self.hp_list.append(Heart(self,listx[i]-30,700))
+                self.hp_list.append(Heart(self,listx[i]-30,self.height - 25))
 
     def gen_enemy(self):
         if self.enemy_list == []:
@@ -267,8 +267,10 @@ class World:
 
         if self.bonus_list != []:
             self.check_bonus_hit()
+
         for i in self.bullet_list:
             i.update(delta)
+
         for i in self.enemy_list:
             i.update(delta)
             if self.bullet_list != []:
@@ -285,21 +287,3 @@ class World:
                     self.hp_list.pop(-1)
                 if self.ship.hp == 0:
                     self.die()
-
-class FPSCounter:
-    def __init__(self):
-        self.time = time.perf_counter()
-        self.frame_times = collections.deque(maxlen=60)
-
-    def tick(self):
-        t1 = time.perf_counter()
-        dt = t1 - self.time
-        self.time = t1
-        self.frame_times.append(dt)
-
-    def get_fps(self):
-        total_time = sum(self.frame_times)
-        if total_time == 0:
-            return 0
-        else:
-            return len(self.frame_times) / sum(self.frame_times)
