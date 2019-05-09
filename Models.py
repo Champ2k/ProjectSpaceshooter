@@ -78,31 +78,12 @@ class Bullet:
         if self.y >= self.world.height:
             self.world.bullet_list.pop(0)
 
-# class EnemyBullet:
-#     def __init__(self, world, x, y):
-#         self.world = world
-#         self.x = x
-#         self.y = y
-
-#     def enemy_shoot(self, direction):
-#         self.y += MOVEMENT_BONUS_SPEED * DIR_OFFSETS[direction][1]
-
-#     def update(self, delta):
-#         self.enemy_shoot(DIR_DOWN)
-
 class Heart:
     def __init__(self, world, x, y):
         self.world = world
         self.x = x
         self.y = y
         self.has_live = True
-    
-    # def del_heart(self):
-        # for i in self.world.enemy_list:
-            # if self.world.ship.if_hit(i) and i.y < -25:
-                # self.heart.has_live = False
-                # self.hp_list.pop(-1)
-                # print(len(self.world.hp_list))
 
     def update(self, delta):
         pass
@@ -154,7 +135,6 @@ class World:
         self.ship = Ship(self, 250, 50)
         self.bullet = Bullet(self, self.ship.x , self.ship.y)
         self.enemy = Enemy(self, randint(50,450), 850)
-        # self.enemybullet = EnemyBullet(self, self.enemy.x, self.enemy.y)
         self.bonus = Bonus(self, randint(50,450), 800)
         self.heart = Heart(self, 0 ,0)
 
@@ -166,7 +146,6 @@ class World:
 
         self.hp_list = []
         self.gen_full_hp()
-        # self.gen_empty_hp()
 
         self.morespeed = 0
         self.score = 0
@@ -214,13 +193,6 @@ class World:
         if self.ship.hp != 0 and self.ship.hp <= 5:
             for i in range(self.ship.hp):
                 self.hp_list.append(Heart(self,listx[i]-30,700))
-    
-    # def gen_empty_hp(self):
-    #     listx = [150, 125, 100, 75, 50]
-    #     if self.ship.hp != 0 and self.ship.hp <= 5:
-    #         for i in range(self.ship.hp):
-    #             self.hp_list.append(Heart(self,listx[i]-30,700))
-                          
 
     def gen_enemy(self):
         if self.enemy_list == []:
@@ -312,8 +284,6 @@ class World:
                     self.hp_list.pop(-1)
                 if self.ship.hp == 0:
                     self.die()
-
-
 
 class FPSCounter:
     def __init__(self):

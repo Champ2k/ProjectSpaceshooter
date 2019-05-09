@@ -25,9 +25,6 @@ class SpaceWindow(arcade.Window):
         self.Bonussprite= ModelSprite('Character\Bonus.png',
                                         model=self.world.bonus)
         
-        # self.EnemyBulletsprite = ModelSprite('Character\Bullet.png',
-                                            # model=self.world.bullet)
-        
         self.set_update_rate(1/70)
 
         self.fps = FPSCounter()
@@ -54,8 +51,6 @@ class SpaceWindow(arcade.Window):
         self.fps.tick()
 
         arcade.draw_text(f'FPS: {self.fps.get_fps():.0f}', WIDTH - 40, HEIGHT - 15, arcade.color.WHITE, 10)
-        
-        # self.EnemyBulletsprite.draw()
 
     def draw_enemy(self):
         self.world.gen_enemy()
