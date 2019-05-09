@@ -12,22 +12,6 @@ class SpaceWindow(arcade.Window):
 
         arcade.set_background_color(arcade.color.BLACK)
         self.background = arcade.load_texture('background.png')
-        # self.world = World(WIDTH, HEIGHT) 
-        # self.Shipsprite = ModelSprite('Character\Ship.png',
-        #                                 model=self.world.ship)
-
-        # self.Bulletsprite = ModelSprite('Character\Bullet.png',
-        #                                 model=self.world.bullet)
-        
-        # self.Enemysprite = ModelSprite('Character\Enemy1.png',
-        #                                 model=self.world.enemy)
-        
-        # self.Bonussprite= ModelSprite('Character\Bonus.png',
-        #                                 model=self.world.bonus)
-        
-        # self.set_update_rate(1/70)
-
-        # self.fps = FPSCounter()
 
         self.game_setup(width, height)
 
