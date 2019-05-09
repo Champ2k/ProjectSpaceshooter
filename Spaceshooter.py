@@ -17,6 +17,7 @@ class SpaceWindow(arcade.Window):
 
     def game_setup(self, width, height):
         self.world = World(WIDTH, HEIGHT) 
+        
         self.Shipsprite = ModelSprite('Character\Ship.png',
                                         model=self.world.ship)
 
