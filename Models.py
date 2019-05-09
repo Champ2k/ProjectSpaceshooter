@@ -211,11 +211,12 @@ class World:
 
     def gen_bonus(self):
         if self.bonus_list == []:
-            if self.time%17 == 2:
+            if self.time%6 == 2:
                 self.bonus = Bonus(self,randint(50,450), 800)
                 self.bonus_list.append(self.bonus)
-                if self.bonus_list[-1].y <= -25:
-                    self.bonus_list = []
+        if self.bonus_list != []:
+            if self.bonus_list[-1].y <= -25:
+                self.bonus_list = []
 
     def start(self):
         self.state = World.STATE_STARTED

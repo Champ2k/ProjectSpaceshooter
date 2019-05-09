@@ -12,6 +12,26 @@ class SpaceWindow(arcade.Window):
 
         arcade.set_background_color(arcade.color.BLACK)
         self.background = arcade.load_texture('background.png')
+        # self.world = World(WIDTH, HEIGHT) 
+        # self.Shipsprite = ModelSprite('Character\Ship.png',
+        #                                 model=self.world.ship)
+
+        # self.Bulletsprite = ModelSprite('Character\Bullet.png',
+        #                                 model=self.world.bullet)
+        
+        # self.Enemysprite = ModelSprite('Character\Enemy1.png',
+        #                                 model=self.world.enemy)
+        
+        # self.Bonussprite= ModelSprite('Character\Bonus.png',
+        #                                 model=self.world.bonus)
+        
+        # self.set_update_rate(1/70)
+
+        # self.fps = FPSCounter()
+
+        self.game_setup(width, height)
+
+    def game_setup(self, width, height):
         self.world = World(WIDTH, HEIGHT) 
         self.Shipsprite = ModelSprite('Character\Ship.png',
                                         model=self.world.ship)
@@ -77,17 +97,25 @@ class SpaceWindow(arcade.Window):
                                             model=i).draw()
 
     def on_key_press(self, key, key_modifiers):
-         self.world.on_key_press(key, key_modifiers)
-         if not self.world.is_dead():
+        self.world.on_key_press(key, key_modifiers)
+        if not self.world.is_dead():
              self.world.start()
-    
+        if key == arcade.key.R and self.world.state == World.STATE_DEAD:
+            self.game_setup(WIDTH, HEIGHT)
+
     def on_key_release(self, key, key_modifiers):
         self.world.on_key_release(key, key_modifiers)
 
     def game_over_draw(self):
         
         output = "GameOver"
-        arcade.draw_text(output,173,350,arcade.color.WHITE,30)
+        output_2 = "Press R to play again"
+        output_3 = f"Total time : {self.world.time}"
+        output_4 = f"Total Score: {self.world.score}"
+        arcade.draw_text(output, WIDTH-317, HEIGHT-330, arcade.color.WHITE, 25)
+        arcade.draw_text(output_3, WIDTH-334, HEIGHT-360, arcade.color.WHITE, 25)
+        arcade.draw_text(output_4, WIDTH-334, HEIGHT-390, arcade.color.WHITE, 25)
+        arcade.draw_text(output_2, WIDTH-373, HEIGHT-425, arcade.color.WHITE, 25)
 
     def game_start_draw(self):
         
