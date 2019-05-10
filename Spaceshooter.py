@@ -1,6 +1,7 @@
 import arcade
 from Models import World, Ship, Bullet, Enemy, Heart
 from Fps import FPSCounter
+import sys
 
 
 WIDTH = 500
@@ -86,6 +87,8 @@ class SpaceWindow(arcade.Window):
              self.world.start()
         if key == arcade.key.R and self.world.state == World.STATE_DEAD:
             self.game_setup(WIDTH, HEIGHT)
+        if key == arcade.key.ESCAPE and self.world.state == World.STATE_DEAD:
+            sys.exit()
 
     def on_key_release(self, key, key_modifiers):
         self.world.on_key_release(key, key_modifiers)
@@ -93,12 +96,14 @@ class SpaceWindow(arcade.Window):
     def game_over_draw(self):
         output = "GameOver"
         output_2 = "Press R to play again"
-        output_3 = f"Total time : {self.world.time}"
-        output_4 = f"Total Score: {self.world.score}"
-        arcade.draw_text(output, WIDTH-315, HEIGHT-325, arcade.color.WHITE, 25)
-        arcade.draw_text(output_3, WIDTH-334, HEIGHT-360, arcade.color.WHITE, 25)
-        arcade.draw_text(output_4, WIDTH-334, HEIGHT-395, arcade.color.WHITE, 25)
-        arcade.draw_text(output_2, WIDTH-373, HEIGHT-430, arcade.color.WHITE, 25)
+        output_3 = f"High time : {self.high_time()}"
+        output_4 = f"High Score: {self.high_score()}"
+        output_5 = "Press Esc to exit"
+        arcade.draw_text(output, WIDTH-315, HEIGHT-300, arcade.color.WHITE, 25)
+        arcade.draw_text(output_3, WIDTH-334, HEIGHT-335, arcade.color.WHITE, 25)
+        arcade.draw_text(output_4, WIDTH-334, HEIGHT-370, arcade.color.WHITE, 25)
+        arcade.draw_text(output_2, WIDTH-373, HEIGHT-400, arcade.color.WHITE, 25)
+        arcade.draw_text(output_5, WIDTH-350, HEIGHT-435, arcade.color.WHITE, 25)
 
     def game_start_draw(self):
         output = "Press any keys"
@@ -108,13 +113,31 @@ class SpaceWindow(arcade.Window):
     
     def score_draw(self):
         output = f"Score: {self.world.score}"
-        arcade.draw_text(output, WIDTH - 130, HEIGHT - 25, arcade.color.WHITE,20)
+        arcade.draw_text(output, WIDTH - 140, HEIGHT - 25, arcade.color.WHITE,20)
 
     def check_state(self):
         if self.world.state == World.STATE_DEAD:
             self.game_over_draw()
         if self.world.state == World.STATE_FROZEN:
             self.game_start_draw()
+    
+    def high_score(self):
+        file = open("Score.txt").readline()
+        if file == "" or int(file) < int(self.world.score):
+            with open("Score.txt", "w") as file:
+                file.write(str(self.world.score))
+        with open("Score.txt", "r") as file:
+            score = file.readline()
+        return score
+
+    def high_time(self):
+        file = open("Time.txt").readline()
+        if file == "" or int(file) < int(self.world.time):
+            with open("Time.txt", "w") as file:
+                file.write(str(self.world.time))
+        with open("Time.txt", "r") as file:
+            score = file.readline()
+        return score
 
     def update(self, delta):
         self.world.update(delta)

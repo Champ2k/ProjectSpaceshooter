@@ -48,8 +48,8 @@ class Ship:
     def check_hp(self):
         for i in self.world.enemy_list:
             if i.y <= -25:
-                self.hp -= 1
                 if self.world.hp_list != []:
+                    self.hp -= 1
                     self.world.heart.has_live = False
                     self.world.hp_list.pop(-1)
             if self.hp == 0:
