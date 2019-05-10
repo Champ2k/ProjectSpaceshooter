@@ -4,7 +4,7 @@ from crashdetect import check_crash, check_crash_ship, check_crash_bonus
 import time
 
 MOVEMENT_SPEED = 5
-MOVEMENT_ENEMY_SPEED = 3
+MOVEMENT_ENEMY_SPEED = 5
 MOVEMENT_BULLET_SPEED = 12
 MOVEMENT_BONUS_SPEED = randint(10,15)
 DIR_STILL = 0
